@@ -116,6 +116,7 @@
   </div>
   <button class="locate-btn" id="locateBtn">📍 Use my location</button>
   <div class="recent-row" id="recentRow"></div>
+  <button class="locate-btn" id="clearBtn" style="display:none;">🗑️ Clear recent cities</button>
   <div id="output"></div>
 </div>
 
@@ -145,12 +146,16 @@
   }
 
   // Draw the row of clickable city chips based on what's saved
-  function renderRecentCities() {
+function renderRecentCities() {
     const cities = loadRecentCities();
+    const clearBtn = document.getElementById('clearBtn');
     if (cities.length === 0) {
       recentRow.innerHTML = '';
+      clearBtn.style.display = 'none';
       return;
     }
+    clearBtn.style.display = 'inline-flex';
+
     recentRow.innerHTML = cities.map(city =>
       `<button class="recent-chip" data-city="${city}">${city}</button>`
     ).join('');
@@ -320,6 +325,11 @@
         locateBtn.textContent = '📍 Use my location';
       }
     );
+  });
+
+document.getElementById('clearBtn').addEventListener('click', () => {
+    localStorage.removeItem(STORAGE_KEY);
+    renderRecentCities();
   });
 
   renderRecentCities();
